@@ -12,8 +12,8 @@ public:
 
   Vector2() {};
   Vector2(const T& _x, const T& _y): x(_x), y(_y) {};
-  Vector2(const Point2<T>& a, const Point<T>& b): x(b.x-a.x), y(b.y-a.y) {};
-  ~Vector() {};
+  Vector2(const Point2<T>& a, const Point2<T>& b): x(b.x-a.x), y(b.y-a.y) {};
+  ~Vector2() {};
 
   inline T length() const {
     return sqrt(x*x + y*y);
@@ -21,12 +21,12 @@ public:
 };
 
 template <typename T>
-inline Point2<T> operator+(const Point<T>& a, const Vector2<T>& b) {
+inline Point2<T> operator+(const Point2<T>& a, const Vector2<T>& b) {
   return Point2<T>(a.x+b.x, a.y+b.y);
 }
 
 template <typename T>
-inline Point2<T> operator-(const Point<T>& a, const Vector2<T>& b) {
+inline Point2<T> operator-(const Point2<T>& a, const Vector2<T>& b) {
   return Point2<T>(a.x-b.x, a.y-b.y);
 }
 

@@ -39,7 +39,7 @@ public:
     }
   };
 
-  ~Field() {
+  ~Field2() {
     if (allocated) {
       delete [] data;
     }
