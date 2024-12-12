@@ -22,6 +22,7 @@ public:
 };
 
 class Grid {
+protected:
   int Mnodes;    // pocet uzlu ve smeru i
   int Nnodes;    // pocet uzlu ve smeru j
   int Mvolumes;  // pocet bunek ve smeru i
