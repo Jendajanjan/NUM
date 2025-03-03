@@ -30,6 +30,10 @@ public:
   double a();
   double Ma();
 
+  static Compressible max(const Compresible& a, const Compressible& b);
+  static Compressible min(const Compresible& a, const Compressible& b);
+  static Compressible fabs(const Compresible& a);
+
   static double kappa;
 
   static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d s);

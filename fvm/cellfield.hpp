@@ -7,7 +7,7 @@
 
 using namespace std;
 
-template<var>
+template<typename var>
 class CellField {
   int Mvol;
   int Nvol;
@@ -149,7 +149,7 @@ inline CellField<var> opretator-=(CellField<var>& a, const CellField<var>& b) {
 }
 
 template <typename var, typename S>
-inline CellField operator*=(const CellField<var>& a, const S& b) {
+inline CellField operator*=(CellField<var>& a, const S& b) {
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
@@ -161,7 +161,7 @@ inline CellField operator*=(const CellField<var>& a, const S& b) {
 }
 
 template <typename var, typename S>
-inline CellField operator/=(const CellField<var>& a, const S& b) {
+inline CellField operator/=(CellField<var>& a, const S& b) {
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
