@@ -1,5 +1,5 @@
-#ifndef CELLFIELD_HPP
-#define CELLFIELD_HPP
+#ifndef NODEFIELD_HPP
+#define NODEFIELD_HPP
 
 #include <iostream>
 #include <cstdlib>
@@ -8,33 +8,33 @@
 using namespace std;
 
 template<typename var>
-class CellField {
-  int Mvol;
-  int Nvol;
+class NodeField {
+  int Mnd;
+  int Nnd;
   int ghost;
 
   Field2<var> data;
 public:
-  CellField(const Grid& g) {
-    Mvol = g.Mvol();
-    Nvol = g.Nvol();
+  NodeField(const Grid& g) {
+    Mnd = g.Mnd();
+    Nnd = g.Nnd();
     ghost = g.gh();
 
-    data.allocate(-ghost, Mvol+ghost, -ghost, Nvol+ghost);
+    data.allocate(-ghost, Mnd+ghost, -ghost, Nnd+ghost);
   };
 
-  CellField(int M, int N, int gh): Mvol(M), Nvol(N), ghost(gh) {
-    data.allocate(-ghost, Mvol+ghost, -ghost, Nvol+ghost);
+  NodeField(int M, int N, int gh): Mnd(M), Nnd(N), ghost(gh) {
+    data.allocate(-ghost, Mnd+ghost, -ghost, Nnd+ghost);
   }
 
-  ~CellField() {};
+  ~NodeField() {};
 
   inline var* operator[](int i) const {
     return data[i];
   }
 
-  int M() const {return Mvol;};
-  int N() const {return Nvol;};
+  int M() const {return Mnd;};
+  int N() const {return Nnd;};
   int gh() const {return ghost;};
   int Imin() const {return data.Imin();};
   int Imax() const {return data.Imax();};
@@ -43,13 +43,13 @@ public:
 };
 
 template <typename var>
-inline CellField<var> operator+(const CellField<var>& a, const CellField<var>& b) {
+inline NodeField<var> operator+(const NodeField<var>& a, const NodeField<var>& b) {
   if (a.M() != b.M() || a.N() != b.N() || a.gh() != b.gh()) {
-    cout << "Nelze scitat pole CellField ruznych velikosti!" << endl;
+    cout << "Nelze scitat pole NodeField ruznych velikosti!" << endl;
     exit(10);
   }
 
-  CellField<var> c(a.M(), a.N(), a.gh());
+  NodeField<var> c(a.M(), a.N(), a.gh());
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
       c[i][j] = a[i][j] + b[i][j];
@@ -60,13 +60,13 @@ inline CellField<var> operator+(const CellField<var>& a, const CellField<var>& b
 }
 
 template <typename var>
-inline CellField<var> operator-(const CellField<var>& a, const CellField<var>& b) {
+inline NodeField<var> operator-(const NodeField<var>& a, const NodeField<var>& b) {
   if (a.M() != b.M() || a.N() != b.N() || a.gh() != b.gh()) {
-    cout << "Nelze odecitat pole CellField ruznych velikosti!" << endl;
+    cout << "Nelze odecitat pole NodeField ruznych velikosti!" << endl;
     exit(10);
   }
 
-  CellField<var> c(a.M(), a.N(), a.gh());
+  NodeField<var> c(a.M(), a.N(), a.gh());
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
       c[i][j] = a[i][j] - b[i][j];
@@ -77,8 +77,8 @@ inline CellField<var> operator-(const CellField<var>& a, const CellField<var>& b
 }
 
 template <typename var, typename S>
-inline CellField<var> operator*(const CellField<var>& a, const S& b) {
-  CellField<var> c(a.M(), a.N(), a.gh());
+inline NodeField<var> operator*(const NodeField<var>& a, const S& b) {
+  NodeField<var> c(a.M(), a.N(), a.gh());
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
@@ -91,8 +91,8 @@ inline CellField<var> operator*(const CellField<var>& a, const S& b) {
 
 
 template <typename var, typename S>
-inline CellField<var> operator*(const S& b, const CellField<var>& a) {
-  CellField<var> c(a.M(), a.N(), a.gh());
+inline NodeField<var> operator*(const S& b, const NodeField<var>& a) {
+  NodeField<var> c(a.M(), a.N(), a.gh());
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
@@ -104,8 +104,8 @@ inline CellField<var> operator*(const S& b, const CellField<var>& a) {
 }
 
 template <typename var, typename S>
-inline CellField<var> operator/(const CellField<var>& a, const S& b) {
-  CellField<var> c(a.M(), a.N(), a.gh());
+inline NodeField<var> operator/(const NodeField<var>& a, const S& b) {
+  NodeField<var> c(a.M(), a.N(), a.gh());
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
@@ -117,9 +117,9 @@ inline CellField<var> operator/(const CellField<var>& a, const S& b) {
 }
 
 template <typename var>
-inline CellField<var> operator+=(CellField<var>& a, const CellField<var>& b) {
+inline NodeField<var> operator+=(NodeField<var>& a, const NodeField<var>& b) {
   if (a.M() != b.M() || a.N() != b.N() || a.gh() != b.gh()) {
-    cout << "Nelze scitat (+=) pole CellField ruznych velikosti!" << endl;
+    cout << "Nelze scitat (+=) pole NodeField ruznych velikosti!" << endl;
     exit(10);
   }
 
@@ -133,9 +133,9 @@ inline CellField<var> operator+=(CellField<var>& a, const CellField<var>& b) {
 }
 
 template <typename var>
-inline CellField<var> operator-=(CellField<var>& a, const CellField<var>& b) {
+inline NodeField<var> operator-=(NodeField<var>& a, const NodeField<var>& b) {
   if (a.M() != b.M() || a.N() != b.N() || a.gh() != b.gh()) {
-    cout << "Nelze odecitat (-=) pole CellField ruznych velikosti!" << endl;
+    cout << "Nelze odecitat (-=) pole NodeField ruznych velikosti!" << endl;
     exit(10);
   }
 
@@ -149,7 +149,7 @@ inline CellField<var> operator-=(CellField<var>& a, const CellField<var>& b) {
 }
 
 template <typename var, typename S>
-inline CellField<var> operator*=(CellField<var>& a, const S& b) {
+inline NodeField<var> operator*=(NodeField<var>& a, const S& b) {
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {
@@ -161,7 +161,7 @@ inline CellField<var> operator*=(CellField<var>& a, const S& b) {
 }
 
 template <typename var, typename S>
-inline CellField<var> operator/=(CellField<var>& a, const S& b) {
+inline NodeField<var> operator/=(NodeField<var>& a, const S& b) {
   
   for (int i=a.Imin(); i<a.Imax(); i++) {
     for (int j=a.Jmin(); j<a.Jmax(); j++) {

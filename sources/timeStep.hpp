@@ -6,6 +6,7 @@
 #include "../fvm/grid.hpp"
 #include "../compressible.hpp"
 #include "setting.hpp"
+#include <omp.h>
 
 using namespace std;
 

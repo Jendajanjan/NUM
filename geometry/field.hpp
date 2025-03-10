@@ -6,7 +6,7 @@
 
 using namespace std;
 
-typename <template T>
+template <typename T>
 class Field2 {
   int imin;
   int imax;
@@ -29,11 +29,10 @@ public:
   };
 
   Field2(const Field2& fld) {
-    int totalSize = (imax - imin) * (jmax - jmin);
-
-    allocated = true;
-    data = new T[totalSize];
+    allocated = false;
+    allocate(fld.imin, fld.imax, fld.jmin, fld.jmax);
     
+    int totalSize = (imax - imin) * (jmax - jmin);  
     for (int i=0; i<totalSize; i++) {
       data[i] = fld.data[i];
     }
@@ -78,10 +77,10 @@ public:
     allocate(_imin, _imax, _jmin, _jmax);
   };
 
-  int Imin() const {return imin};
-  int Imax() const {return imax};
-  int Jmin() const {return jmin};
-  int Jmax() const {return jmax};
+  int Imin() const {return imin;};
+  int Imax() const {return imax;};
+  int Jmin() const {return jmin;};
+  int Jmax() const {return jmax;};
 
   T* operator[](int i) const {
     int jSize = jmax - jmin;

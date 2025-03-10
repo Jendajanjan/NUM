@@ -22,13 +22,13 @@ void saveNormRez(const CellField<Compressible>& w, const Grid& g, const int& ite
   L2 = Compressible::sqrt(L2);
 
   ofstream fout("results/L2.txt", ios::app);
-  fout << iter << " " << L2.rho << " " << L2.rhoU.x << " " << L2.rhoU.v
+  fout << iter << " " << L2.rho << " " << L2.rhoU.x << " " << L2.rhoU.y
        << " " << L2.e << endl;
 
   fout.close();
 
   fout.open("results/Linf.txt", ios::app);
-  fout << iter << " " << Linf.rho << " " << Linf.rhoU.x << " " << Linf.rhoU.v
+  fout << iter << " " << Linf.rho << " " << Linf.rhoU.x << " " << Linf.rhoU.y
        << " " << Linf.e << endl;
 
   fout.close();

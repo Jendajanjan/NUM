@@ -74,14 +74,14 @@ void Grid::updateCenters() {
 }
 
 void Grid::update() {
-  for (int i=0; i<Mvolumes; i++) {
-    for (int j=0; i<Nnodes; j++) {
+  for (int i=-ghost; i<Mvolumes+ghost; i++) {
+    for (int j=-ghost; j<Nnodes+ghost; j++) {
       facesI[i][j].updateI(*this, i, j);
     }
   }
 
-  for (int i=0; i<Mnodes; i++) {
-    for (int j=0; j<Nvolumes; j++) {
+  for (int i=-ghost; i<Mnodes+ghost; i++) {
+    for (int j=-ghost; j<Nvolumes+ghost; j++) {
       facesJ[i][j].updateJ(*this, i, j);
     }
   }

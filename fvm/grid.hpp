@@ -14,7 +14,7 @@ public:
 
 class Face {
 public:
-  Pointd2 center;  // stred steny
+  Point2d center;  // stred steny
   Vector2d s;      // normalovy vektor prenasobeny velikosti steny
 
   void updateI(Grid& g, int i, int j);

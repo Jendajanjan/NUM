@@ -3,6 +3,7 @@
 
 #include "grid.hpp"
 #include "cellfield.hpp"
+#include <omp.h>
 
 template <typename var>
 void computeRez(const CellField<var>& w, CellField<var>& rez, const Grid& g) {
@@ -14,6 +15,7 @@ void computeRez(const CellField<var>& w, CellField<var>& rez, const Grid& g) {
   int jmin = w.Jmin(), jmax = w.Jmax();
 
   // vynulovani rezidui
+# pragma omp parallel for
   for (int i=imin; i<imax; i++) {
     for (int j=jmin; j<jmax; j++) {
       rez[i][j].zero();
@@ -21,6 +23,7 @@ void computeRez(const CellField<var>& w, CellField<var>& rez, const Grid& g) {
   }
 
   // cyklus pres steny ve smeru i
+# pragma omp parallel for
   for (int i=0; i<M; i++) {
     for (int j=0; j<N+1; j++) {
       const var& wl = w[i][j];
@@ -35,8 +38,9 @@ void computeRez(const CellField<var>& w, CellField<var>& rez, const Grid& g) {
   }
 
   // cyklus pres steny ve smeru j
-  for (int i=0; i<M+1; i++) {
-    for (int j=0; j<N; j++) {
+# pragma omp parallel for
+  for (int j=0; j<N; j++) {
+    for (int i=0; i<M+1; i++) {
       const var& wl = w[i-1][j];
       const var& wr = w[i][j];
       const Vector2d& s = g.faceJ(i, j).s;
@@ -49,6 +53,7 @@ void computeRez(const CellField<var>& w, CellField<var>& rez, const Grid& g) {
   }
 
   // deleni objemem bunky a nasobeni -1x
+# pragma omp parallel for
   for (int i=0; i<M; i++) {
     for (int j=0; j<N; j++) {
       rez[i][j] = -1. * rez[i][j] / g.volume(i, j);

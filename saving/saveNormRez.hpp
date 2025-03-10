@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iomanip>
 #include "../fvm/grid.hpp"
-#include "../fvm/celfield.hpp"
+#include "../fvm/cellfield.hpp"
 #include "../compressible.hpp"
 
 using namespace std;

@@ -3,9 +3,9 @@
 
 #include "../compressible.hpp"
 #include "../fvm/grid.hpp"
-#include "../cellfield.hpp"
+#include "../fvm/cellfield.hpp"
 #include "setting.hpp"
-#inlude "inlet.hpp"
+#include "inlet.hpp"
 #include "outlet.hpp"
 #include "wall.hpp"
 

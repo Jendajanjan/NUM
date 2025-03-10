@@ -26,17 +26,19 @@ public:
     rho = 1.; rhoU = Vector2d(1., 1.), e = 1.;
   }
 
-  double p();
-  double a();
-  double Ma();
+  double p() const;
+  double a() const;
+  double Ma() const;
 
-  static Compressible max(const Compresible& a, const Compressible& b);
-  static Compressible min(const Compresible& a, const Compressible& b);
-  static Compressible fabs(const Compresible& a);
+  static Compressible max(const Compressible& a, const Compressible& b);
+  static Compressible min(const Compressible& a, const Compressible& b);
+  static Compressible fabs(const Compressible& a);
+  static Compressible sqrt(const Compressible& a);
 
   static double kappa;
 
-  static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d s);
+  static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d& s);
+  static Compressible Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s);
 };
 
 inline Compressible operator+(const Compressible& a, const Compressible& b) {

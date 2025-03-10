@@ -4,15 +4,15 @@ double Compressible::kappa;
 
 Compressible (*Compressible::flux)(const Compressible& wl, const Compressible& wr, const Vector2d& s);
 
-double Compressible::p() {
+double Compressible::p() const {
   return (kappa - 1.) * (e - 0.5 * (pow(rhoU.x, 2) + pow(rhoU.y, 2)) / rho);
 }
 
-double Compressible::a() {
-  return sqrt(kappa * p() / rho);
+double Compressible::a() const {
+  return std::sqrt(kappa * p() / rho);
 }
 
-double Compressible:Ma() {
+double Compressible::Ma() const {
   return rhoU.length() / rho / a();
 }
 
@@ -42,4 +42,32 @@ Compressible Compressible::fabs(const Compressible& a) {
 
   return Compressible(_rho, Vector2d(_rhou, _rhov), _e);
 }
+
+Compressible Compressible::sqrt(const Compressible& a) {
+  double _rho = std::sqrt(a.rho);
+  double _rhou = std::sqrt(a.rhoU.x);
+  double _rhov = std::sqrt(a.rhoU.y);
+  double _e = std::sqrt(a.e);
+
+  return Compressible(_rho, Vector2d(_rhou, _rhov), _e);
+}
+
+Compressible Compressible::Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s) {
+  Vector2d n = s / s.length();
+
+  Vector2d u = (wl.rhoU/wl.rho + wr.rhoU/wr.rho) / 2.;
+  double un = dot(u, n);
+
+  Compressible flx;
+
+  if (un >= 0.) flx = wl * un;
+  else flx = wr * un;
+
+  double p = (wl.p() + wr.p()) / 2.;
+
+  flx += Compressible(0., p*n, p*un);
+
+  return flx * s.length();
+}
+
 
