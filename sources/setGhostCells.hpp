@@ -5,10 +5,11 @@
 #include "../fvm/grid.hpp"
 #include "../fvm/cellfield.hpp"
 #include "setting.hpp"
-#include "inlet.hpp"
-#include "outlet.hpp"
-#include "wall.hpp"
+#include "typedefs.hpp"
 
-void setGhostCells(CellField<Compressible>& w, const Grid& g, const Setting& setting);
+using namespace std;
+
+void setGhostCells(CellField<Compressible>& w, const Grid& g,
+		   const Setting& setting, const map<string, bCondition>& BC);
 
 #endif

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 #include "fvm/cellfield.hpp"
 #include "fvm/grid.hpp"
@@ -7,6 +8,7 @@
 #include "sources/initialisation.hpp"
 #include "sources/timeStep.hpp"
 #include "sources/setGhostCells.hpp"
+#include "sources/BC.hpp"
 #include "saving/saveNormRez.hpp"
 #include "saving/saveResults.hpp"
 #include "compressible.hpp"
@@ -16,16 +18,25 @@ using namespace std;
 int main() {
   cout << "Welcome in Sim2024!" << endl;
 
-  Setting setting;
+  Setting setting("starter.txt");
 
-  setting.p0 = 1.;
-  setting.rho0 = 1.;
-  setting.alpha = 0.;
-  setting.Ma2is = 0.675;
-  setting.CFL = 0.4;
-  setting.kappa = 1.4;
+  Grid g = Grid_gamm(setting.mCells, setting.nCells, setting.ghostCells);
 
-  Grid g = Grid_gamm(150, 50, 1);
+  map<string, bCondition> BC;
+  for (auto iter=setting.usedBC.begin(); iter!=setting.usedBC.end(); iter++) {
+    auto bCond = bcList.find(iter->second);
+    if (bCond!=bcList.end()) {
+      BC[iter->first] = bcList[iter->second];
+    }
+    else {
+      cout << "Not found \"" << iter->second << "\" boundary condition!" << endl;
+      cout << "Possibilities are:" << endl;
+      for (bCond = bcList.begin(); bCond!=bcList.end(); bCond++) {
+	cout << bCond->first << endl;
+      }
+      exit(52);
+    }
+  }
 
   CellField<Compressible> w(g);
   CellField<Compressible> wn(g);
@@ -34,7 +45,7 @@ int main() {
   initialisation(w, setting);
 
   for (int i=0; i<100000; i++) {
-    setGhostCells(w, g, setting);
+    setGhostCells(w, g, setting, BC);
 
     double dt = timeStep(w, g, setting);
 
@@ -49,7 +60,7 @@ int main() {
     }
   }
 
-  setGhostCells(w, g, setting);
+  setGhostCells(w, g, setting, BC);
   saveResults(w, g);
 
   cout << "Bye Bye!" << endl;

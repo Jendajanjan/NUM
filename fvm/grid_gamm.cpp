@@ -60,6 +60,25 @@ Grid_gamm::Grid_gamm(int M, int N, int ght) {
 
   // nastveni sten, objemu a stredu bunek
   update();
+
+
+  // prirazeni jmen stenam
+  for (int i=-ghost; i<Mvolumes+ghost; i++) {
+    for (int j=-ghost; j<Nnodes+ghost; j++) {
+      facesI[i][j].name = "internal";
+
+      if (j<=0 || j>=Nnodes-1) facesI[i][j].name = "Wall";
+    }
+  }
+
+  for (int i=-ghost; i<Mnodes+ghost; i++) {
+    for (int j=-ghost; j<Nvolumes+ghost; j++) {
+      facesJ[i][j].name = "internal";
+
+      if (i<=0) facesJ[i][j].name = "Inlet";
+      if (i>=Mnodes-1) facesJ[i][j].name = "Outlet";
+    }
+  }
 }
 
       

@@ -6,6 +6,7 @@
 #include "../fvm/cellfield.hpp"
 #include "../fvm/nodefield.hpp"
 #include "../compressible.hpp"
+#include "vtk_output.hpp"
 
 using namespace std;
 

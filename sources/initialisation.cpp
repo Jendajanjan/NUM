@@ -5,11 +5,20 @@ void initialisation(CellField<Compressible>& w, const Setting& setting) {
   system("rm -f results/*");
 
   Compressible::kappa = setting.kappa;
-  Compressible::flux = Compressible::Upwind;
 
-  double rhoInit = 0.9;
-  Vector2d uInit(0.5, 0.);
-  double pInit = 0.8;
+  switch (setting.flux) {
+  case 1:
+    Compressible::flux = Compressible::Upwind;
+    break;
+  default:
+    cout << "Not a such numerical flux!" << endl;
+    cout << "Use 1 - Upwind" << endl;
+    exit(53);
+  }
+
+  const double& rhoInit = setting.rhoInit;
+  const Vector2d& uInit = setting.uInit;
+  const double& pInit = setting.pInit;
 
   double eInit = pInit / (Compressible::kappa - 1.)
                + 0.5 * rhoInit * (uInit.x*uInit.x + uInit.y*uInit.y);
