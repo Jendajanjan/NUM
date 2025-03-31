@@ -32,7 +32,10 @@ public:
   double CFL;
   double kappa;
   int stop;
+  int temporalOrder;
   int spatialOrder;
+  int limiter;
+  vector<double> alphaK;
 
   Setting(const string& fileName);
   ~Setting() {};

@@ -1,6 +1,7 @@
 #ifndef COMPRESSIBLE_HPP
 #define COMPRESSIBLE_HPP
 
+#include <iostream>
 #include <cmath>
 #include <algorithm>
 #include "geometry/vector.hpp"
@@ -39,6 +40,38 @@ public:
 
   static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s);
+
+  static const int nVars = 4;
+
+  double& operator[](int k) {
+    switch(k) {
+    case 0: return rho;
+      break;
+    case 1: return rhoU.x;
+      break;
+    case 2: return rhoU.y;
+      break;
+    case 3: return e;
+      break;
+    default: cout << "Compressible operator []: out of a range!" << endl;
+      exit(61);
+    }
+  }
+
+  double operator[](int k) const {
+    switch(k) {
+    case 0: return rho;
+      break;
+    case 1: return rhoU.x;
+      break;
+    case 2: return rhoU.y;
+      break;
+    case 3: return e;
+      break;
+    default: cout << "Compressible operator []: out of a range!" << endl;
+      exit(61);
+    }
+  }
 };
 
 inline Compressible operator+(const Compressible& a, const Compressible& b) {

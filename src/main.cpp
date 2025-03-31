@@ -40,18 +40,24 @@ int main() {
 
   CellField<Compressible> w(g);
   CellField<Compressible> wn(g);
+  CellField<Compressible> wStar(g);
   CellField<Compressible> rez(g);
 
   initialisation(w, setting);
 
   for (int i=0; i<100000; i++) {
-    setGhostCells(w, g, setting, BC);
 
     double dt = timeStep(w, g, setting);
 
-    computeRez(w, rez, g);
+    wStar = w;
+    for (int k=0; k<setting.alphaK.size(); k++) {
+      setGhostCells(wStar, g, setting, BC);
 
-    wn = w + dt * rez;
+      computeRez(wStar, rez, g);
+
+      wStar = w + dt * rez;
+    }
+    wn = wStar;
     w = wn;
 
     if (i%10 == 0) {
