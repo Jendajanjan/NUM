@@ -32,6 +32,7 @@ public:
   double CFL;
   double kappa;
   int stop;
+  int spatialOrder;
 
   Setting(const string& fileName);
   ~Setting() {};

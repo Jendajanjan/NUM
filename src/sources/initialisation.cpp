@@ -16,6 +16,17 @@ void initialisation(CellField<Compressible>& w, const Setting& setting) {
     exit(53);
   }
 
+  switch(setting.spatialOrder) {
+  case 1:
+    grad<Compressible> = zeroGrad<Compressible>;
+    limiter<Compressible> = zeroLimiter<Compressible>;
+    break;
+  default:
+    cout << "No a such possibility for a spatial order!" << endl;
+    cout << "Possibilities are: 1 - 1st order" << endl;
+    exit(11);
+  }
+
   const double& rhoInit = setting.rhoInit;
   const Vector2d& uInit = setting.uInit;
   const double& pInit = setting.pInit;

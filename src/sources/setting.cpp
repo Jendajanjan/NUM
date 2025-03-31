@@ -8,6 +8,7 @@ Setting::Setting(const string& fileName) {
   sections.insert("BOUNDARY_CONDITIONS");
   sections.insert("FLUX_SPLITTER");  sections.insert("TIME");
   sections.insert("PHYSICAL_VALUES");  sections.insert("SAVING");
+  sections.insert("ACCURACY");
 
   loadDataFile(fileName, sections, dataFile);
 
@@ -62,6 +63,10 @@ Setting::Setting(const string& fileName) {
   // nacitani informaci o numerickem toku
   section = "FLUX_SPLITTER";
   findSection(dataFile, "flux", section, flux);
+
+  // nacitani informaci o numerickem toku
+  section = "ACCURACY";
+  findSection(dataFile, "spatialOrder", section, spatialOrder);
 
   // nacitani informaci o case
   section = "TIME";
