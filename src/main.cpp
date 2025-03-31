@@ -45,7 +45,7 @@ int main() {
 
   initialisation(w, setting);
 
-  for (int i=0; i<100000; i++) {
+  for (int i=0; i<setting.stop; i++) {
 
     double dt = timeStep(w, g, setting);
 
