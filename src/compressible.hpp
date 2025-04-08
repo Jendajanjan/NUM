@@ -6,7 +6,11 @@
 #include <algorithm>
 #include "geometry/vector.hpp"
 
+#include "primitiveVars.hpp"
+
 using namespace std;
+
+class PrimitiveVars;
 
 class Compressible {
 public:
@@ -30,6 +34,9 @@ public:
   double p() const;
   double a() const;
   double Ma() const;
+  double T() const;
+  double mu() const;
+  double k() const;
 
   static Compressible max(const Compressible& a, const Compressible& b);
   static Compressible min(const Compressible& a, const Compressible& b);
@@ -37,9 +44,15 @@ public:
   static Compressible sqrt(const Compressible& a);
 
   static double kappa;
+  static double R;     // merna plynova konstanta (nekorektni znaceni)
+  static double cp;
+  static double cv;
+  static double Pr;
 
   static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s);
+  static Compressible Rusanov(const Compressible& wl, const Compressible& wr, const Vector2d& s);
+  static Compressible fluxDissipative(const Vector2<PrimitiveVars>& gradP, const Compressible& wFace, const Vector2d& s);
 
   static const int nVars = 4;
 

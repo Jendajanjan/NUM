@@ -1,5 +1,5 @@
-#ifndef WALL_HPP
-#define WALL_HPP
+#ifndef SLIPWALL_HPP
+#define SLIPWALL_HPP
 
 #include <cmath>
 #include "../geometry/vector.hpp"
@@ -8,6 +8,6 @@
 
 using namespace std;
 
-Compressible wall(const Compressible& wInside, const Vector2d& s, const Setting& setting);
+Compressible slipWall(const Compressible& wInside, const Vector2d& s, const Setting& setting);
 
 #endif

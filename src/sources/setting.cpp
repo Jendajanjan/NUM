@@ -6,7 +6,7 @@ Setting::Setting(const string& fileName) {
 
   sections.insert("GRID");  sections.insert("INITIAL_CONDITIONS");
   sections.insert("BOUNDARY_CONDITIONS");
-  sections.insert("FLUX_SPLITTER");  sections.insert("TIME");
+  sections.insert("FLUX_SPLITTER");  sections.insert("TIME");  sections.insert("SYSTEM");
   sections.insert("PHYSICAL_VALUES");  sections.insert("SAVING");
   sections.insert("ACCURACY");
 
@@ -20,8 +20,13 @@ Setting::Setting(const string& fileName) {
     findSection(dataFile, "mCells", section, mCells);
     findSection(dataFile, "nCells", section, nCells);
     break;
+  case 2:
+    findSection(dataFile, "name1", section, name1);
+    findSection(dataFile, "name2", section, name2);
+    break;
   default:
     cout << "Nepodporovany typ site!" << endl;
+    cout << "Possibilities are: 1 for grid type GAMM, 2 for a grid type XY!" << endl;
     exit(51);
   }
   findSection(dataFile, "ghostCells", section, ghostCells);
@@ -90,11 +95,19 @@ Setting::Setting(const string& fileName) {
   section = "TIME";
   findSection(dataFile, "CFL", section, CFL);
 
+  // nacitani informaci o systemu
+  section = "SYSTEM";
+  findSection(dataFile, "convection", section, convection);
+  findSection(dataFile, "diffusion", section, diffusion);
+  findSection(dataFile, "nodeWeightType", section, nodeWeightType);
+
   // nacitani informaci o fyzikalnich promennych
   section = "PHYSICAL_VALUES";
   findSection(dataFile, "kappa", section, kappa);
   findSection(dataFile, "rho0", section, rho0);
   findSection(dataFile, "p0", section, p0);
+  findSection(dataFile, "R", section, R);
+  findSection(dataFile, "Pr", section, Pr);
 
   // nacitani informaci o ukonceni programu
   section = "SAVING";

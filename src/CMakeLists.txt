@@ -29,5 +29,5 @@ SET(DIRS fvm geometry saving sources)
 INCLUDE_DIRECTORIES(${DIRS} ${PROJECT_SOURCE_DIR})
 SUBDIRS(${DIRS})
 
-ADD_EXECUTABLE(Sim2024 main.cpp compressible.cpp)
+ADD_EXECUTABLE(Sim2024 main.cpp compressible.cpp primitiveVars.cpp fluxList.cpp)
 TARGET_LINK_LIBRARIES(Sim2024 Fvm Saving Sources)

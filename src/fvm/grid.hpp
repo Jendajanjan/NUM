@@ -2,6 +2,9 @@
 #define GRID_HPP
 
 #include <string>
+#include <vector>
+#include <map>
+#include <utility>
 #include "../geometry/point.hpp"
 #include "../geometry/vector.hpp"
 #include "../geometry/field.hpp"
@@ -10,9 +13,12 @@ using namespace std;
 
 class Grid;
 
+typedef void (*coefficients)(Grid& g);
+
 class Node {
 public:
   Point2d vertex;
+  vector<double> alpha;
 };
 
 class Face {
@@ -46,6 +52,7 @@ public:
   double x(const int& i, const int& j) const;
   double y(const int& i, const int& j) const;
   Point2d& vertex(const int& i, const int& j) const;
+  vector<double>& alpha(const int& i, const int& j) const;
   Node& node(const int& i, const int& j) const;
   Face& faceI(const int& i, const int& j) const;
   Face& faceJ(const int& i, const int& j) const;
@@ -62,6 +69,12 @@ public:
 
   void updateVolumes();
   void updateCenters();
+
+  static void (*computeAlpha)(Grid& g);
+  static void computeAlphaWeight(Grid& g);
+  static void computeAlphaLSM(Grid& g);
+
+  static map<string, coefficients> coeffList;
 };  
 
 #endif

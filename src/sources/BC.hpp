@@ -5,13 +5,19 @@
 #include "typedefs.hpp"
 #include "inlet.hpp"
 #include "outlet.hpp"
-#include "wall.hpp"
+#include "slipWall.hpp"
+#include "noSlipWall.hpp"
+#include "symmetry.hpp"
+#include "homogeneousNeumann.hpp"
 
 using namespace std;
 
 map<string, bCondition> bcList = {condition("inlet", inlet),
 				  condition("outlet", outlet),
-				  condition("wall", wall)};
+				  condition("slipWall", slipWall),
+				  condition("noSlipWall", noSlipWall),
+				  condition("symmetry", symmetry),
+				  condition("homogeneousNeumann", homogeneousNeumann)};
 
 
 #endif

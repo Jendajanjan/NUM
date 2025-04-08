@@ -11,6 +11,8 @@
 #include "sources/BC.hpp"
 #include "saving/saveNormRez.hpp"
 #include "saving/saveResults.hpp"
+#include "sources/setGrid.hpp"
+#include "sources/step.hpp"
 #include "compressible.hpp"
 
 using namespace std;
@@ -20,7 +22,8 @@ int main() {
 
   Setting setting("starter.txt");
 
-  Grid g = Grid_gamm(setting.mCells, setting.nCells, setting.ghostCells);
+  Grid g;
+  setGrid(g, setting);
 
   map<string, bCondition> BC;
   for (auto iter=setting.usedBC.begin(); iter!=setting.usedBC.end(); iter++) {
@@ -39,8 +42,6 @@ int main() {
   }
 
   CellField<Compressible> w(g);
-  CellField<Compressible> wn(g);
-  CellField<Compressible> wStar(g);
   CellField<Compressible> rez(g);
 
   initialisation(w, setting);
@@ -49,16 +50,7 @@ int main() {
 
     double dt = timeStep(w, g, setting);
 
-    wStar = w;
-    for (int k=0; k<setting.alphaK.size(); k++) {
-      setGhostCells(wStar, g, setting, BC);
-
-      computeRez(wStar, rez, g);
-
-      wStar = w + dt * rez;
-    }
-    wn = wStar;
-    w = wn;
+    step<Compressible>(w, rez, g, dt, BC, setting);
 
     if (i%10 == 0) {
       cout << "iter: " << i << ", dt = " << dt << endl;

@@ -5,16 +5,13 @@ void initialisation(CellField<Compressible>& w, const Setting& setting) {
   system("rm -f results/*");
 
   Compressible::kappa = setting.kappa;
+  Compressible::R = setting.R;
+  Compressible::Pr = setting.Pr;
+  Compressible::cv = Compressible::R / (Compressible::kappa - 1.);
+  Compressible::cp = Compressible::cv * Compressible::kappa;
 
-  switch (setting.flux) {
-  case 1:
-    Compressible::flux = Compressible::Upwind;
-    break;
-  default:
-    cout << "Not a such numerical flux!" << endl;
-    cout << "Use 1 - Upwind" << endl;
-    exit(53);
-  }
+  FluxList flxList;
+  Compressible::flux = flxList[setting.flux];
 
   switch(setting.spatialOrder) {
   case 1:

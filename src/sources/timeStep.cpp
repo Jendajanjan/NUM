@@ -21,14 +21,38 @@ double timeStep(const CellField<Compressible>& w, const Grid& g, const Setting& 
 
       double dX = s1.length();
       double dY = s2.length();
+      
+      double lambda = 0.;
 
-      Vector2d u = wij.rhoU / wij.rho;
-      double a = wij.a();
+      switch (setting.convection) {
+      case 0: break;
+      case 1: {
+	Vector2d u = wij.rhoU / wij.rho;
+	double a = wij.a();
+	double uTilde = dot(u, s1) / dX;
+	double vTilde = dot(u, s2) / dY;
+	double lambdaConv = (fabs(uTilde) + a) / dX + (fabs(vTilde) + a) / dY;
+	lambda += lambdaConv;
+      }
+	break;
+      default:
+	cout << "No such possibility for a computation of a convective part of a time step!" << endl;
+	exit(10);
+      }
 
-      double uTilde = dot(u, s1) / dX;
-      double vTilde = dot(u, s2) / dY;
-
-      double lambda = (fabs(uTilde) + a) / dX + (fabs(vTilde) + a) / dY;
+      switch (setting.diffusion) {
+      case 0: break;
+      case 1: {
+	double mu = wij.mu();
+	double rho = wij.rho;
+	double lambdaDiff = 2. * mu/rho * (1. / (dX*dX) + 1. / (dY*dY));
+	lambda += lambdaDiff;
+      }
+	break;
+      default:
+	cout << "No such possibility for a computation of a dissipative part of a time step!" << endl;
+	exit(10);
+      }
 
       double dtij = setting.CFL / lambda;
 

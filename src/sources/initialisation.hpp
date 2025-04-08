@@ -12,6 +12,7 @@
 #include "fvm/venkatakrishnan.hpp"
 #include "../compressible.hpp"
 #include "setting.hpp"
+#include "fluxList.hpp"
 
 using namespace std;
 
