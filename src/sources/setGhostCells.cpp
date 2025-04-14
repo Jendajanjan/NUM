@@ -1,7 +1,7 @@
 #include "setGhostCells.hpp"
 
 void setGhostCells(CellField<Compressible>& w, const Grid& g,
-		   const Setting& setting, const map<string, bCondition>& BC) {
+		   const Setting& setting, const map<string, bcWithJacobian>& BC) {
   int M = w.M();
   int N = w.N();
   int gh = w.gh();
@@ -14,7 +14,7 @@ void setGhostCells(CellField<Compressible>& w, const Grid& g,
     Compressible wInside = w[0][j];
 
     auto it = BC.find(f.name);
-    Compressible wOutside = it->second(wInside, f.s, setting);
+    Compressible wOutside = it->second.first(wInside, f.s, setting);
 
     for (int k=1; k<=gh; k++) {
       w[-k][j] = wOutside;
@@ -26,7 +26,7 @@ void setGhostCells(CellField<Compressible>& w, const Grid& g,
     wInside = w[M-1][j];
 
     it = BC.find(f.name);
-    wOutside = it->second(wInside, f.s, setting);
+    wOutside = it->second.first(wInside, f.s, setting);
 
     for (int k=1; k<=gh; k++) {
       w[M-1+k][j] = wOutside;
@@ -44,7 +44,7 @@ void setGhostCells(CellField<Compressible>& w, const Grid& g,
     Compressible wInside = w[i][0];
 
     auto it = BC.find(f.name);
-    Compressible wOutside = it->second(wInside, f.s, setting);
+    Compressible wOutside = it->second.first(wInside, f.s, setting);
 
     for (int k=1; k<=gh; k++) {
       w[i][-k] = wOutside;
@@ -57,7 +57,7 @@ void setGhostCells(CellField<Compressible>& w, const Grid& g,
     wInside = w[i][N-1];
     
     it = BC.find(f.name);
-    wOutside = it->second(wInside, f.s, setting);
+    wOutside = it->second.first(wInside, f.s, setting);
 
     for (int k=1; k<=gh; k++) {
       w[i][N-1+k] = wOutside;

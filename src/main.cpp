@@ -13,11 +13,15 @@
 #include "saving/saveResults.hpp"
 #include "sources/setGrid.hpp"
 #include "sources/step.hpp"
+#include "sources/linearSolver.hpp"
 #include "compressible.hpp"
 
 using namespace std;
 
-int main() {
+int main(int argc,char **args) {
+  
+  PetscInitialize( &argc , &args , (char *)0 , 0 );
+  
   cout << "Welcome in Sim2024!" << endl;
 
   Setting setting("starter.txt");
@@ -25,7 +29,7 @@ int main() {
   Grid g;
   setGrid(g, setting);
 
-  map<string, bCondition> BC;
+  map<string, bcWithJacobian> BC;
   for (auto iter=setting.usedBC.begin(); iter!=setting.usedBC.end(); iter++) {
     auto bCond = bcList.find(iter->second);
     if (bCond!=bcList.end()) {
@@ -41,16 +45,20 @@ int main() {
     }
   }
 
+  LinearSolver<Compressible> linSolver(setting.solver, g);
+
   CellField<Compressible> w(g);
+  CellField<Compressible> wOld(g);
   CellField<Compressible> rez(g);
 
   initialisation(w, setting);
-
+  wOld = w;
+  
   for (int i=0; i<setting.stop; i++) {
 
     double dt = timeStep(w, g, setting);
 
-    step<Compressible>(w, rez, g, dt, BC, setting);
+    step<Compressible>(w, wOld, rez, g, dt, BC, linSolver, setting);
 
     if (i%10 == 0) {
       cout << "iter: " << i << ", dt = " << dt << endl;
@@ -62,6 +70,10 @@ int main() {
   saveResults(w, g);
 
   cout << "Bye Bye!" << endl;
+
+  linSolver.free();
+
+  PetscFinalize();
 
   return 0;
 }

@@ -13,6 +13,35 @@ void initialisation(CellField<Compressible>& w, const Setting& setting) {
   FluxList flxList;
   Compressible::flux = flxList[setting.flux];
 
+  switch (setting.solver) {
+  case 1: {
+    FluxList flxList;
+    Compressible::flux = flxList[setting.flux];
+  }
+    break;
+
+  case 2: {
+    FluxList flxList;
+    Compressible::flux = flxList[setting.flux];
+
+    switch (setting.temporalOrder) {
+    case 1: timeIncrement<Compressible> = timeIncrementFirstOrder<Compressible>;
+      break;
+    case 2:  timeIncrement<Compressible> = timeIncrementSecondOrder<Compressible>;
+      break;
+    default:
+      cout << "No such temporal order!" << endl;
+      exit(0);
+    }
+  }
+    break;
+
+  default:
+    cout << "There is no possible choice for a solver!" << endl;
+    cout << "Possibilities are 1 for explicit solver, 2 for implicit solver." << endl;
+    exit(1);
+  }
+
   switch(setting.spatialOrder) {
   case 1:
     grad<Compressible> = zeroGrad<Compressible>;

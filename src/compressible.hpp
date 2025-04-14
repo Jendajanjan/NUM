@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include "geometry/vector.hpp"
+#include "geometry/matrix.hpp"
 
 #include "primitiveVars.hpp"
 
@@ -53,6 +54,13 @@ public:
   static Compressible Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible Rusanov(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible fluxDissipative(const Vector2<PrimitiveVars>& gradP, const Compressible& wFace, const Vector2d& s);
+
+  static pair<pair<Matrixd, Matrixd>, Compressible> (*fluxImplicit)(const Compressible& wl,
+						      const Compressible& wr, const Vector2d& s);
+  static pair<pair<Matrixd, Matrixd>, Compressible> UpwindImplicit(const Compressible& wl,
+						      const Compressible& wr, const Vector2d& s);
+  static pair<pair<Matrixd, Matrixd>, Compressible> RusanovImplicit(const Compressible& wl,
+						      const Compressible& wr, const Vector2d& s);
 
   static const int nVars = 4;
 

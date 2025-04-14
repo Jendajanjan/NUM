@@ -43,6 +43,7 @@ public:
   int convection;
   int diffusion;
   string nodeWeightType;
+  int solver;
 
   Setting(const string& fileName);
   ~Setting() {};

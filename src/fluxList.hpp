@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <utility>
+#include "geometry/matrix.hpp"
 #include "compressible.hpp"
 
 using namespace std;
@@ -30,6 +31,33 @@ public:
       cout << "There is no \"" << name << "\" flux type for compressible variables!" << endl;
       cout << "Possible choice is: " << endl;
       for (it=fluxTypes.begin(); it!=fluxTypes.end(); it++) {
+	cout << it->first << endl;
+      }
+      exit(0);
+    }
+  }
+};
+
+typedef pair<pair<Matrixd, Matrixd>, Compressible> (*fluxImplicitType)(const Compressible& wl,
+						    const Compressible& wr, const Vector2d& s);
+
+class FluxImplicitList {
+public:
+  map<string, fluxImplicitType> fluxImplicitTypes;
+
+  FluxImplicitList();
+  ~FluxImplicitList() {};
+
+  fluxImplicitType operator[](const string& name) {
+    map<string, fluxImplicitType>::iterator it;
+    it = fluxImplicitTypes.find(name);
+    if (it != fluxImplicitTypes.end()) {
+      return fluxImplicitTypes[name];
+    }
+    else {
+      cout << "There is no \"" << name << "\" implicit flux type for compressible variables!" << endl;
+      cout << "Possible choice is: " << endl;
+      for (it=fluxImplicitTypes.begin(); it!=fluxImplicitTypes.end(); it++) {
 	cout << it->first << endl;
       }
       exit(0);
