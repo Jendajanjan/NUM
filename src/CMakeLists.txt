@@ -6,12 +6,6 @@ IF(COMMAND cmake_policy)
    cmake_policy(SET CMP0012 NEW)
 ENDIF(COMMAND cmake_policy)
 
-# Automatically use whatever MPI mpicc is currently in PATH
-# This avoids mismatched MPI headers/libs
-# Commented out hardcoded OpenMPI paths to avoid PETSc runtime crashes
-# set(CMAKE_C_COMPILER "/opt/openmpi-4.1.5/bin/mpicc" CACHE FILEPATH "MPI C compiler")
-# set(CMAKE_CXX_COMPILER "/opt/openmpi-4.1.5/bin/mpicxx" CACHE FILEPATH "MPI C++ compiler")
-
 SET(PETSC $ENV{PETSC_DIR}/$ENV{PETSC_ARCH})
 SET(ENV{PKG_CONFIG_PATH} ${PETSC}/lib/pkgconfig)
 
