@@ -18,9 +18,10 @@
 
 using namespace std;
 
-int main(int argc,char **args) {
+int main(int argc, char **argv) {
+
   
-  PetscInitialize( &argc , &args , (char *)0 , 0 );
+  PetscInitialize(&argc, &argv, NULL, NULL);
   
   cout << "Welcome in Sim2024!" << endl;
 

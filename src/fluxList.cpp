@@ -3,6 +3,7 @@
 FluxList::FluxList() {
   fluxTypes["Upwind"] = Compressible::Upwind;
   fluxTypes["Rusanov"] = Compressible::Rusanov;
+  fluxTypes["AUSMUP"] =Compressible::AUSMUP;
 }
 
 FluxImplicitList::FluxImplicitList() {

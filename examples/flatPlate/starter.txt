@@ -37,7 +37,7 @@ spatialOrder		2			//(1) 1st order, (2) 2nd order
 limiter			1			//(1) Barth-Jespersen, (2) Venkatakrishnan
 //////////////////////////////////////////////////////////////////////////////
 FLUX_SPLITTER
-flux			Rusanov			// Upwind, Rusanov
+flux			Rusanov			// Upwind, Rusanov, AUSMUP
 //////////////////////////////////////////////////////////////////////////////
 SYSTEM
 solver			1			// (1) explicit, (2) implicit

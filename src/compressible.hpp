@@ -52,6 +52,7 @@ public:
 
   static Compressible (*flux)(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible Upwind(const Compressible& wl, const Compressible& wr, const Vector2d& s);
+  static Compressible AUSMUP(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible Rusanov(const Compressible& wl, const Compressible& wr, const Vector2d& s);
   static Compressible fluxDissipative(const Vector2<PrimitiveVars>& gradP, const Compressible& wFace, const Vector2d& s);
 

@@ -89,6 +89,95 @@ Compressible Compressible::Upwind(const Compressible& wl, const Compressible& wr
   return flx * s.length();
 }
 
+Compressible Compressible::AUSMUP(const Compressible& wl, const Compressible& wr, const Vector2d& s) {
+    // Parameters (can also be placed in Setting if preferred)
+    constexpr double Kp = 0.25;
+    constexpr double Ku = 0.75;
+    constexpr double sigma = 1.0;
+    constexpr double Minf = 0.1;
+
+    // Extract primitive variables
+    PrimitiveVars ql = PrimitiveVars::set(wl);
+    PrimitiveVars qr = PrimitiveVars::set(wr);
+    Vector2d n = s / s.length();
+    // Normal velocities
+    double ul_n = dot(ql.u, n);
+    double ur_n = dot(qr.u, n);
+
+    // Speed of sound
+    double al= wl.a();
+    double ar = wr.a();
+    double a_half = 0.5 * (al + ar);
+    double Mbar = std::sqrt(ul_n*ul_n+ur_n*ur_n)/(2*a_half); 
+    double M0 = std::sqrt(std::min(1.0, std::max(Mbar*Mbar, Minf*Minf)));
+    double fa = M0*(2-M0);
+    double alfa = 3.0/16.0*(-4.0+5.0*fa*fa);
+    // Mach numbers
+    double ML = ul_n / a_half;
+    double MR = ur_n / a_half;
+
+    // Split Mach number functions (5th-order polynomials)
+    auto M_plus = [](double M) {
+      if (std::fabs(M)>=1.0)
+        return 0.5 * (M + std::fabs(M));
+      else
+        return 0.25 * (M + 1.0) * (M + 1.0) *(1.0+0.25*(M-1)*(M-1));
+    };
+    auto M_minus = [](double M) {
+      if (std::fabs(M)>=1.0)
+        return 0.5 * (M - std::fabs(M));
+      else
+        return -0.25 * (M - 1.0) * (M - 1.0) * (1.0+0.25*(M+1.0)*(M+1.0));
+    };
+    auto P_plus = [](double M, double alfa) {
+      if (std::fabs(M) >= 1.0)
+        return 0.5 * (M + std::fabs(M))/M;
+      else
+        return 0.25 * (M + 1.0) * (M + 1.0) * ((2.0-M)-16.0*alfa*M*(-0.25*(M-1.0)*(M-1.0)));
+    };
+    auto P_minus = [](double M, double alfa) {
+      if (std::fabs(M) >= 1.0)
+        return 0.5 * (M - std::fabs(M))/M;
+      else
+        return -0.25 * (M - 1.0) * (M - 1.0) * ((-2.0-M)+16.0*alfa*M*(0.25*(M+1.0)*(M+1.0)));
+    };
+
+    // Central variables
+    double rho_avg = (ql.rho + qr.rho)/2;
+    double M_half = M_plus(ML) + M_minus(MR)
+        - Kp/fa * std::max(1.0 - sigma * Mbar*Mbar, 0.0) * (wr.p() - wl.p()) / (rho_avg * a_half * a_half);
+    
+    double m_half;
+    // Mass flux
+    if (M_half > 0) {
+      m_half = a_half * M_half * ql.rho;
+    } else {
+      m_half = a_half * M_half * qr.rho;
+    }
+
+    // Pressure flux with velocity diffusion
+    double p_half = P_plus(ML, alfa) * wl.p() + P_minus(MR, alfa) * wr.p()
+        - Ku * P_plus(ML,alfa) * P_minus(MR, alfa) *(ql.rho + qr.rho)*(fa*a_half)* (ur_n - ul_n);
+
+    Compressible flux;
+    if (m_half>0){
+      flux.rho = m_half;
+      flux.rhoU = m_half * ql.u +p_half*n;
+      flux.e = m_half * (wl.e+wl.p())/ql.rho;
+    }
+    else{
+      flux.rho = m_half;
+      flux.rhoU = m_half * qr.u +p_half*n;
+      flux.e = m_half * (wr.e+wr.p())/qr.rho;
+    }
+
+    // Construct flux
+
+    return flux * s.length();
+
+
+}
+
 Compressible Compressible::Rusanov(const Compressible& wl, const Compressible& wr, const Vector2d& s) {
   // Vector2d n = s / s.length();
 
