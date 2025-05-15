@@ -19,6 +19,7 @@
 #include "fvm/timeIncrement.hpp"
 #include "fvm/timeIncrementFirstOrder.hpp"
 #include "fvm/timeIncrementSecondOrder.hpp"
+#include "quickPrimitive.hpp"
 
 using namespace std;
 

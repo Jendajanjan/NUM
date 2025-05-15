@@ -1,0 +1,54 @@
+GRID
+grid_type		1			// (1) gamm
+mCells			150
+nCells			50
+ghostCells		1
+//////////////////////////////////////////////////////////////////////////////
+INITIAL_CONDITIONS
+rhoInit			0.9			// initial density
+uInit			0.5			// initial x velocity component
+vInit			0			// initial y velocity component
+pInit			0.8			// initial pressure
+//////////////////////////////////////////////////////////////////////////////
+BOUNDARY_CONDITIONS
+numOfBoundaries		3			// pocet typu hranic
+
+boundary1		Inlet			// jmeno hranice v souboru se siti
+bcType1			inlet			// pozadovana okrajova podminka
+
+boundary2		Outlet
+bcType2			outlet
+
+boundary3		Wall
+bcType3			slipWall
+
+alpha			0			// inlet flow angel [deg]
+M2is			0.675			// isoentropic Mach number
+//////////////////////////////////////////////////////////////////////////////
+FLUX_SPLITTER
+flux			AUSMUP			// Upwind, Rusanov, AUSMUP
+//////////////////////////////////////////////////////////////////////////////
+SYSTEM
+solver			1			// (1) explicit, (2) implicit
+convection		1			// (0) off, (1) on
+diffusion		1			// (0) off, (1) on
+nodeWeightType		LSM			// LSM, Weight
+//////////////////////////////////////////////////////////////////////////////
+ACCURACY
+temporalOrder		2			// 1 - 1st order, 2 - 2nd order
+spatialOrder		2			// 1 - 1st order, 2 - 2nd order
+limiter			2			// 1 - Barth-Jespersen,
+						// 2 - Venkatakrishnan
+//////////////////////////////////////////////////////////////////////////////
+TIME
+CFL			0.4
+//////////////////////////////////////////////////////////////////////////////
+PHYSICAL_VALUES
+kappa			1.4
+rho0			1
+p0			1
+R			287.1
+Pr			0.72
+//////////////////////////////////////////////////////////////////////////////
+SAVING
+stop			50000			// total number of interations

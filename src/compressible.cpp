@@ -89,8 +89,31 @@ Compressible Compressible::Upwind(const Compressible& wl, const Compressible& wr
   return flx * s.length();
 }
 
+static inline double M_plus(double M) {
+  return (std::fabs(M)>=1.0) ? 0.5 * (M + std::fabs(M))
+    : 0.25 * (M + 1.0) * (M + 1.0) *(1.0+0.25*(M-1)*(M-1));
+};
+
+static inline double M_minus(double M) {
+  return (std::fabs(M)>=1.0) ? 0.5 * (M - std::fabs(M))
+  : -0.25 * (M - 1.0) * (M - 1.0) * (1.0+0.25*(M+1.0)*(M+1.0));
+}; 
+
+static inline double P_plus(double M, double alfa) {
+  return (std::fabs(M) >= 1.0) ? 0.5 * (M + std::fabs(M))/M
+    : 0.25 * (M + 1.0) * (M + 1.0) * ((2.0-M)-16.0*alfa*M*(-0.25*(M-1.0)*(M-1.0)));
+};
+
+static inline double P_minus(double M, double alfa) {
+  return (std::fabs(M) >= 1.0) ? 0.5 * (M - std::fabs(M))/M
+    : -0.25 * (M - 1.0) * (M - 1.0) * ((-2.0-M)+16.0*alfa*M*(0.25*(M+1.0)*(M+1.0)));
+};
 Compressible Compressible::AUSMUP(const Compressible& wl, const Compressible& wr, const Vector2d& s) {
-    // Parameters (can also be placed in Setting if preferred)
+
+ 
+  
+  
+  // Parameters (can also be placed in Setting if preferred)
     constexpr double Kp = 0.25;
     constexpr double Ku = 0.75;
     constexpr double sigma = 1.0;
@@ -129,18 +152,9 @@ Compressible Compressible::AUSMUP(const Compressible& wl, const Compressible& wr
       else
         return -0.25 * (M - 1.0) * (M - 1.0) * (1.0+0.25*(M+1.0)*(M+1.0));
     };
-    auto P_plus = [](double M, double alfa) {
-      if (std::fabs(M) >= 1.0)
-        return 0.5 * (M + std::fabs(M))/M;
-      else
-        return 0.25 * (M + 1.0) * (M + 1.0) * ((2.0-M)-16.0*alfa*M*(-0.25*(M-1.0)*(M-1.0)));
-    };
-    auto P_minus = [](double M, double alfa) {
-      if (std::fabs(M) >= 1.0)
-        return 0.5 * (M - std::fabs(M))/M;
-      else
-        return -0.25 * (M - 1.0) * (M - 1.0) * ((-2.0-M)+16.0*alfa*M*(0.25*(M+1.0)*(M+1.0)));
-    };
+    
+    double PpL = P_plus(ML, alfa);
+    double PmR = P_minus(MR, alfa);
 
     // Central variables
     double rho_avg = (ql.rho + qr.rho)/2;
@@ -156,8 +170,8 @@ Compressible Compressible::AUSMUP(const Compressible& wl, const Compressible& wr
     }
 
     // Pressure flux with velocity diffusion
-    double p_half = P_plus(ML, alfa) * wl.p() + P_minus(MR, alfa) * wr.p()
-        - Ku * P_plus(ML,alfa) * P_minus(MR, alfa) *(ql.rho + qr.rho)*(fa*a_half)* (ur_n - ul_n);
+    double p_half = PpL * wl.p() + PmR * wr.p()
+        - Ku * PpL * PmR *(ql.rho + qr.rho)*(fa*a_half)* (ur_n - ul_n);
 
     Compressible flux;
     if (m_half>0){

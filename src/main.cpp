@@ -18,7 +18,7 @@
 
 using namespace std;
 
-int main(int argc, char **args) {
+int main(int argc, char **argv) {
 
   
   PetscInitialize( &argc , &argv, (char *)0, 0);
